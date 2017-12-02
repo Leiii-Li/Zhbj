@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.v4.view.ViewPager
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+    </android.support.v4.view.ViewPager>
+
+    <RadioGroup
+        android:id="@+id/mHone_RadioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@mipmap/bottom_tab_bg"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/mRadioButton_Home"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:button="@null"
+            android:checked="true"
+            android:drawableTop="@drawable/home_radiobutton_home_selector"
+            android:gravity="center"
+            android:padding="2dp"
+            android:text="首页"
+            android:textColor="@color/home_radiobutton_textcolor"
+            android:textSize="16sp" />
+
+        <RadioButton
+            android:id="@+id/mRadioButton_NewsCenter"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:button="@null"
+            android:drawableTop="@drawable/home_radiobutton_newscenter_selector"
+            android:gravity="center"
+            android:padding="2dp"
+            android:text="新闻"
+            android:textColor="@color/home_radiobutton_textcolor"
+            android:textSize="16sp" />
+
+        <RadioButton
+            android:id="@+id/mRadioButton_SmartService"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:button="@null"
+            android:drawableTop="@drawable/home_radiobutton_smartservice_selector"
+            android:gravity="center"
+            android:padding="2dp"
+            android:text="智慧服务"
+            android:textColor="@color/home_radiobutton_textcolor"
+            android:textSize="16sp" />
+
+        <RadioButton
+            android:id="@+id/mRadioButton_Gov"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:button="@null"
+            android:drawableTop="@drawable/home_radiobutton_gov_selector"
+            android:gravity="center"
+            android:padding="2dp"
+            android:text="政务"
+            android:textColor="@color/home_radiobutton_textcolor"
+            android:textSize="16sp" />
+
+        <RadioButton
+            android:id="@+id/mRadioButton_Setting"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:button="@null"
+            android:drawableTop="@drawable/home_radiobutton_setting_selector"
+            android:gravity="center"
+            android:padding="2dp"
+            android:text="设置"
+            android:textColor="@color/home_radiobutton_textcolor"
+            android:textSize="16sp" />
+    </RadioGroup>
+</LinearLayout>
