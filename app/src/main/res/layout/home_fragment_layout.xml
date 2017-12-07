@@ -4,12 +4,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <android.support.v4.view.ViewPager
+    <john.com.zhbj.view.NoScrollViewPager
+        android:id="@+id/mPagerContainer"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_weight="1">
 
-    </android.support.v4.view.ViewPager>
+    </john.com.zhbj.view.NoScrollViewPager>
 
     <RadioGroup
         android:id="@+id/mHone_RadioGroup"
@@ -21,7 +22,7 @@
 
         <RadioButton
             android:id="@+id/mRadioButton_Home"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:button="@null"
@@ -35,7 +36,7 @@
 
         <RadioButton
             android:id="@+id/mRadioButton_NewsCenter"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:button="@null"
@@ -48,7 +49,7 @@
 
         <RadioButton
             android:id="@+id/mRadioButton_SmartService"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:button="@null"
@@ -61,7 +62,7 @@
 
         <RadioButton
             android:id="@+id/mRadioButton_Gov"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:button="@null"
@@ -74,7 +75,7 @@
 
         <RadioButton
             android:id="@+id/mRadioButton_Setting"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:button="@null"

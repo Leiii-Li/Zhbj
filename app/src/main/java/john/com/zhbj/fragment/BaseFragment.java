@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import butterknife.ButterKnife;
+import john.com.zhbj.MainActivityHome;
 
 /**
  * Created by John on 2017/11/30.
@@ -17,7 +18,8 @@ import butterknife.ButterKnife;
 
 public abstract class BaseFragment extends Fragment {
 
-    protected Activity mActivity;
+
+    protected MainActivityHome mActivity;
 
     public BaseFragment() {
         super();
@@ -26,8 +28,8 @@ public abstract class BaseFragment extends Fragment {
     // 初始化数据
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        mActivity = getActivity();
         super.onCreate(savedInstanceState);
+        mActivity = (MainActivityHome) getActivity();
     }
 
     // 加载Fragment布局的方法
@@ -35,7 +37,7 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = initView();
-        ButterKnife.inject(view);
+        ButterKnife.inject(this, view);
         return view;
     }
 

@@ -37,7 +37,6 @@ public class MainActivityGuide extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // TODO: 2017/12/2  view.setId()
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guide);
         ButterKnife.inject(this);

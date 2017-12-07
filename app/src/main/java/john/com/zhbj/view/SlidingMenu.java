@@ -25,6 +25,9 @@ import john.com.zhbj.fragment.MenuFragment;
  * Created by John on 2017/11/21.
  */
 
+/**
+ * 修改Bug : mDistance = 0 每次执行up 或者 close open 这两个方法时，必须要将一些标记，或者判断条件的元素重置，否则会有一些bug,以后写自定义控件时也是如此！！！
+ */
 public class SlidingMenu extends ViewGroup {
     private int mMenuViewWidth;
     private int mDistance;
@@ -44,9 +47,9 @@ public class SlidingMenu extends ViewGroup {
     private FragmentManager mFragmentManager;
 
     // 当前是否在执行滑动
-    private boolean isFlying = false;
-    // 当前是否为快速点击
-    private boolean isShortClick = false;
+
+    // 当前是否可用
+    private boolean isEnable = true;
 
     public void addFragment(FragmentManager supportFragmentManager, Fragment homeFragment, Fragment menuFragment) {
         this.mFragmentManager = supportFragmentManager;
@@ -56,6 +59,16 @@ public class SlidingMenu extends ViewGroup {
         transaction.add(HOME_LAYOUT_ID, mHomeFragment);
         transaction.add(MENU_LAYOUT_ID, mMenuFragment);
         transaction.commit();
+    }
+
+    public void toggle() {
+        if (currentState == State.OPEN) {
+            currentState = State.CLOSE;
+            close();
+        } else {
+            currentState = State.OPEN;
+            open();
+        }
     }
 
     private enum State {
@@ -116,6 +129,12 @@ public class SlidingMenu extends ViewGroup {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        // 通过测试发现当侧拉菜单打开时，再点击首页，便无法通过滑动来隐藏侧拉菜单
+        // 这里我准确的规定了是否可用的情况，首次打开，页面定位在首页，两个条件成立无法滑动
+        // 当点击到新闻中心界面，打开菜单栏，在打开的状态下点击切换到首页，此时状态为OPEN,依然可以通过滑动来关闭侧滑菜单
+        if (!isEnable && currentState == State.CLOSE) {
+            return false;
+        }
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 startX = event.getX();
@@ -123,8 +142,10 @@ public class SlidingMenu extends ViewGroup {
                     int a = getDisplay().getWidth() - mMenuViewWidth;
                     if (startX >= a && startX <= getDisplay().getWidth()) {
                         downTime = System.currentTimeMillis();
+                        System.out.println("当前为开启状态记录Down时间");
                     }
                 }
+                System.out.println("  Down:  " + currentState);
                 break;
             case MotionEvent.ACTION_MOVE:
                 // 如果点击了规定区域，但是滑动了不视为单点
@@ -138,30 +159,35 @@ public class SlidingMenu extends ViewGroup {
                     mDistance = mMenuViewWidth;
                 }
                 mScrollTo(mDistance);
+                System.out.println("  Move:  " + currentState + " StartX:" + startX + " EndX: " + endX);
                 break;
             case MotionEvent.ACTION_UP:
                 upTime = System.currentTimeMillis();
                 if (upTime - downTime <= 500) {
                     // 如果点击与释放的时间在500 毫秒内，说明是快速点击，且如果点击的不是规定区域downTime为0，相减的值为一个很大的数
                     if (currentState == State.OPEN) {
+                        System.out.println("Up  当前为开启状态且Up时间Down时间相隔不超过500毫秒，执行关闭");
                         close();
                         // 执行了close，那么上次的滑动距离就为0
-                        mLastDx = 0;
+                        downTime = 0;
                         break;
                     }
                 }
-                if (!isFlying) {
-                    if (mDistance <= mMenuViewWidth / 2) {
-                        currentState = State.CLOSE;
-                        scroll(mDistance, 0);
-                        mDistance = 0;
-                    } else {
-                        currentState = State.OPEN;
-                        scroll(mDistance, mMenuViewWidth);
-                        mDistance = mMenuViewWidth;
-                    }
-                    mLastDx = mDistance;
+                System.out.println("  LastDx:  " + mLastDx + "  Distance:  " + mDistance + " startX: " + startX);
+                mLastDx = mDistance;
+                startX = 0;
+                if (mDistance <= mMenuViewWidth / 2) {
+                    currentState = State.CLOSE;
+                    scroll(mDistance, 0);
+                    mLastDx = 0;
+                    mDistance = 0;
+                } else {
+                    currentState = State.OPEN;
+                    scroll(mDistance, mMenuViewWidth);
+                    mLastDx = mMenuViewWidth;
+                    mDistance = 0;
                 }
+                System.out.println("  Up:  " + currentState);
                 break;
         }
         return true;
@@ -187,6 +213,12 @@ public class SlidingMenu extends ViewGroup {
     // 是dispatchTouchEvent判断，具体判断操作有它来做
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
+        // 通过测试发现当侧拉菜单打开时，再点击首页，便无法通过滑动来隐藏侧拉菜单
+        // 这里我准确的规定了是否可用的情况，首次打开，页面定位在首页，两个条件成立无法滑动
+        // 当点击到新闻中心界面，打开菜单栏，在打开的状态下点击切换到首页，此时状态为OPEN,依然可以通过滑动来关闭侧滑菜单
+        if (!isEnable && currentState == State.CLOSE) {
+            return false;
+        }
         // 判断，如果是上下滑动，return false：不拦截传递给scrollview，如果左右滑动，return true：拦截事件
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
@@ -204,7 +236,6 @@ public class SlidingMenu extends ViewGroup {
                 }
                 break;
             case MotionEvent.ACTION_UP:
-
                 break;
         }
         return super.onInterceptTouchEvent(ev);
@@ -218,8 +249,6 @@ public class SlidingMenu extends ViewGroup {
             int currX = mScroller.getCurrX();
             mScrollTo(currX);
             invalidate();
-        } else {
-            isFlying = false;
         }
     }
 
@@ -228,12 +257,22 @@ public class SlidingMenu extends ViewGroup {
     }
 
     public void open() {
-        isFlying = true;
+        mLastDx = mMenuViewWidth;
+        mDistance = 0;
+        currentState = State.OPEN;
         scroll(0, mMenuViewWidth);
     }
 
     public void close() {
-        downTime = 0;
+        // 为什么需要在这里将上一次的滑动距离手动至为正确的值
+        // 当界面通过MenuButton来打开或关闭界面，当下一次滑动时就会出现瞬移的情况。
+        mLastDx = 0;
+        mDistance = 0;
+        currentState = State.CLOSE;
         scroll(mMenuViewWidth, 0);
+    }
+
+    public void setEnable(boolean flag) {
+        this.isEnable = flag;
     }
 }

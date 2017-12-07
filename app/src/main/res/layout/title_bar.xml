@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@mipmap/title_red_bg">
+
+    <TextView
+        android:id="@+id/titleBar_tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="新闻"
+        android:textColor="#FFFFFF"
+        android:textSize="23sp" />
+    <!-- 
+       ImageButton : 如果只是显示图片的按钮，使用imageButton，可以实现自动适配，如果一个按钮只是显示图片，使用imageButton
+       button:图片的大小，是有多大就显示多大,如果一个按钮要显示文本，使用button
+     -->
+    <ImageButton
+        android:id="@+id/titleBar_btn_menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:background="@mipmap/img_menu" />
+
+    <ImageButton
+        android:id="@+id/titleBar_btn_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:background="@mipmap/back"
+        android:visibility="gone" />
+
+
+    <LinearLayout
+        android:id="@+id/titleBar_ll_ShareAndTextSize"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="10dp"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <ImageButton
+            android:id="@+id/titleBar_btn_TextSize"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:background="@mipmap/icon_textsize" />
+
+        <ImageButton
+            android:id="@+id/titleBar_btn_Share"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:background="@mipmap/icon_share" />
+    </LinearLayout>
+
+
+    <ImageButton
+        android:id="@+id/titleBar_btn_Image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="10dp"
+        android:background="@mipmap/icon_pic_list_type"
+        android:visibility="gone" />
+
+</RelativeLayout>
