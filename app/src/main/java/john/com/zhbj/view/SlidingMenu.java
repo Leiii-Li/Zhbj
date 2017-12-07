@@ -143,10 +143,8 @@ public class SlidingMenu extends ViewGroup {
                     int a = getDisplay().getWidth() - mMenuViewWidth;
                     if (startX >= a && startX <= getDisplay().getWidth()) {
                         downTime = System.currentTimeMillis();
-                        System.out.println("当前为开启状态记录Down时间");
                     }
                 }
-                System.out.println("  Down:  " + currentState);
                 break;
             case MotionEvent.ACTION_MOVE:
                 // 如果点击了规定区域，但是滑动了不视为单点
@@ -160,32 +158,27 @@ public class SlidingMenu extends ViewGroup {
                     mDistance = mMenuViewWidth;
                 }
                 mScrollTo(mDistance);
-                System.out.println("  Move:  " + currentState + " StartX:" + startX + " EndX: " + endX);
                 break;
             case MotionEvent.ACTION_UP:
                 upTime = System.currentTimeMillis();
                 if (upTime - downTime <= 500) {
                     // 如果点击与释放的时间在500 毫秒内，说明是快速点击，且如果点击的不是规定区域downTime为0，相减的值为一个很大的数
                     if (currentState == State.OPEN) {
-                        System.out.println("Up  当前为开启状态且Up时间Down时间相隔不超过500毫秒，执行关闭");
                         close();
                         // 执行了close，那么上次的滑动距离就为0
                         downTime = 0;
                         break;
                     }
                 }
-                System.out.println("  LastDx:  " + mLastDx + "  Distance:  " + mDistance + "  State:" + currentState);
                 // Final版
                 if (mDistance != 0) {
                     mLastDx = mDistance;
                     if (mDistance <= mMenuViewWidth / 2) {
-                        System.out.println("Close");
                         currentState = State.CLOSE;
                         scroll(mDistance, 0);
                         mLastDx = 0;
                         mDistance = 0;
                     } else {
-                        System.out.println("Open");
                         currentState = State.OPEN;
                         scroll(mDistance, mMenuViewWidth);
                         mLastDx = mMenuViewWidth;
@@ -193,7 +186,6 @@ public class SlidingMenu extends ViewGroup {
                     }
                 }
                 startX = 0;
-                System.out.println("Up  LastDx:  " + mLastDx + "  Distance:  " + mDistance + "  State:" + currentState);
                 break;
         }
         return true;
