@@ -27,6 +27,7 @@ import john.com.zhbj.fragment.MenuFragment;
 
 /**
  * 修改Bug : mDistance = 0 每次执行up 或者 close open 这两个方法时，必须要将一些标记，或者判断条件的元素重置，否则会有一些bug,以后写自定义控件时也是如此！！！
+ * 自定义控件，当业务逻辑变多时，很多没有的Bug都会出来，很多一部分都是因为一些标记，所以在以后的开发中需要很注重标记的重置,细心。
  */
 public class SlidingMenu extends ViewGroup {
     private int mMenuViewWidth;
@@ -173,21 +174,26 @@ public class SlidingMenu extends ViewGroup {
                         break;
                     }
                 }
-                System.out.println("  LastDx:  " + mLastDx + "  Distance:  " + mDistance + " startX: " + startX);
-                mLastDx = mDistance;
-                startX = 0;
-                if (mDistance <= mMenuViewWidth / 2) {
-                    currentState = State.CLOSE;
-                    scroll(mDistance, 0);
-                    mLastDx = 0;
-                    mDistance = 0;
-                } else {
-                    currentState = State.OPEN;
-                    scroll(mDistance, mMenuViewWidth);
-                    mLastDx = mMenuViewWidth;
-                    mDistance = 0;
+                System.out.println("  LastDx:  " + mLastDx + "  Distance:  " + mDistance + "  State:" + currentState);
+                // Final版
+                if (mDistance != 0) {
+                    mLastDx = mDistance;
+                    if (mDistance <= mMenuViewWidth / 2) {
+                        System.out.println("Close");
+                        currentState = State.CLOSE;
+                        scroll(mDistance, 0);
+                        mLastDx = 0;
+                        mDistance = 0;
+                    } else {
+                        System.out.println("Open");
+                        currentState = State.OPEN;
+                        scroll(mDistance, mMenuViewWidth);
+                        mLastDx = mMenuViewWidth;
+                        mDistance = 0;
+                    }
                 }
-                System.out.println("  Up:  " + currentState);
+                startX = 0;
+                System.out.println("Up  LastDx:  " + mLastDx + "  Distance:  " + mDistance + "  State:" + currentState);
                 break;
         }
         return true;
