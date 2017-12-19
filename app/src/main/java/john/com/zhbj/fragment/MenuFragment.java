@@ -46,7 +46,7 @@ public class MenuFragment extends BaseFragment {
                 currentPosition = position;
                 mAdapter.notifyDataSetChanged();
                 mActivity.getSlidingMenu().close();
-                mActivity.getHomeFragment().getNewsCenterPager().switchPage(position);
+                mActivity.getHomeFragment().getNewsCenterPager().switchMenuDetailPage(position);
             }
         });
     }

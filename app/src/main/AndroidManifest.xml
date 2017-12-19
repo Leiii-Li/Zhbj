@@ -16,7 +16,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivityHome"></activity>
+        <activity
+            android:name=".MainActivityHome"
+            android:theme="@style/Theme.PageIndicatorDefaults"></activity>
     </application>
     <uses-permission android:name="android.permission.INTERNET" />
 </manifest>

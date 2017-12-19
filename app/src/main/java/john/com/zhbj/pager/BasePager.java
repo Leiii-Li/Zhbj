@@ -2,11 +2,13 @@ package john.com.zhbj.pager;
 
 import android.app.Activity;
 import android.media.Image;
+import android.support.v4.app.FragmentManager;
 import android.view.View;
 import android.view.animation.Interpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import butterknife.ButterKnife;
@@ -44,24 +46,37 @@ public abstract class BasePager {
     @InjectView(R.id.titleBar_btn_Image)
     protected ImageButton mImageOrientationTypeButton;
 
+    @InjectView(R.id.mBasePagerTitleView)
+    protected RelativeLayout mBasePagerTitleView;
+
     public MainActivityHome mHomeActivity;
 
-    public BasePager(MainActivityHome activity) {
+    public BasePager(MainActivityHome activity, boolean isHideTitle) {
         this.mHomeActivity = activity;
         initRootView(initView());
         ButterKnife.inject(this, mRootView);
+        if (isHideTitle) {
+            mBasePagerTitleView.setVisibility(View.GONE);
+        }
     }
+
+    public BasePager(MainActivityHome activity) {
+        this(activity, false);
+    }
+
 
     // 初始化布局
     private void initRootView(Object i) {
         View contentView;
-        if (i instanceof Integer) {
-            contentView = View.inflate(SmartCityApplication.getContext(), (Integer) i, null);
-        } else {
-            contentView = (View) i;
+        if (null != i) {
+            if (i instanceof Integer) {
+                contentView = View.inflate(SmartCityApplication.getContext(), (Integer) i, null);
+            } else {
+                contentView = (View) i;
+            }
+            mRootView = View.inflate(SmartCityApplication.getContext(), R.layout.base_pager_rootview, null);
+            ((FrameLayout) mRootView.findViewById(R.id.basePager_ContentViewContainer)).addView(contentView);
         }
-        mRootView = View.inflate(SmartCityApplication.getContext(), R.layout.base_pager_rootview, null);
-        ((FrameLayout) mRootView.findViewById(R.id.basePager_ContentViewContainer)).addView(contentView);
     }
 
     public View getRootView() {
@@ -78,4 +93,6 @@ public abstract class BasePager {
     public void click() {
         mHomeActivity.getSlidingMenu().toggle();
     }
+
+
 }

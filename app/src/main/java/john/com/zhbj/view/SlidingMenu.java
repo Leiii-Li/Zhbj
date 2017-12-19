@@ -1,6 +1,7 @@
 package john.com.zhbj.view;
 
 import android.content.Context;
+import android.content.SyncStatusObserver;
 import android.support.annotation.AnimatorRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -23,6 +24,9 @@ import john.com.zhbj.fragment.MenuFragment;
 
 /**
  * Created by John on 2017/11/21.
+ * <p>
+ * 关于侧拉菜单与ViewPager配合使用无法接受到Down事件，但是当滑不动的时候，SlidingMenu才能接受到Move事件，造成页面滑动bug
+ * 解决方法：修改ViewPager的onTouchEvent逻辑处理来解决问题。
  */
 
 /**
@@ -71,6 +75,11 @@ public class SlidingMenu extends ViewGroup {
             open();
         }
     }
+
+    public void setDownX(float downX) {
+        this.startX = downX;
+    }
+
 
     private enum State {
         OPEN, CLOSE;
@@ -134,11 +143,13 @@ public class SlidingMenu extends ViewGroup {
         // 这里我准确的规定了是否可用的情况，首次打开，页面定位在首页，两个条件成立无法滑动
         // 当点击到新闻中心界面，打开菜单栏，在打开的状态下点击切换到首页，此时状态为OPEN,依然可以通过滑动来关闭侧滑菜单
         if (!isEnable && currentState == State.CLOSE) {
+            System.out.println("on TouchEvent");
             return false;
         }
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 startX = event.getX();
+                System.out.println("TouchEvent Down  startX: " + startX);
                 if (currentState == State.OPEN) {
                     int a = getDisplay().getWidth() - mMenuViewWidth;
                     if (startX >= a && startX <= getDisplay().getWidth()) {
@@ -151,6 +162,7 @@ public class SlidingMenu extends ViewGroup {
                 downTime = 0;
                 float endX = event.getX();
                 mDistance = mLastDx + (int) (endX - startX);
+                System.out.println("TouchEvent Move mDistance:  " + mDistance + "   mLastDx:  " + mLastDx + "  startX:  " + startX + "  endX:  " + endX);
                 if (mDistance <= 0) {
                     mDistance = 0;
                 }
@@ -160,6 +172,7 @@ public class SlidingMenu extends ViewGroup {
                 mScrollTo(mDistance);
                 break;
             case MotionEvent.ACTION_UP:
+                System.out.println("TouchEvent Up");
                 upTime = System.currentTimeMillis();
                 if (upTime - downTime <= 500) {
                     // 如果点击与释放的时间在500 毫秒内，说明是快速点击，且如果点击的不是规定区域downTime为0，相减的值为一个很大的数
@@ -211,6 +224,9 @@ public class SlidingMenu extends ViewGroup {
     // 是dispatchTouchEvent判断，具体判断操作有它来做
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
+
+        System.out.println("SlidingMenu OnInterceptorTouchEvent:  " + ev.getAction());
+
         // 通过测试发现当侧拉菜单打开时，再点击首页，便无法通过滑动来隐藏侧拉菜单
         // 这里我准确的规定了是否可用的情况，首次打开，页面定位在首页，两个条件成立无法滑动
         // 当点击到新闻中心界面，打开菜单栏，在打开的状态下点击切换到首页，此时状态为OPEN,依然可以通过滑动来关闭侧滑菜单
@@ -226,10 +242,14 @@ public class SlidingMenu extends ViewGroup {
             case MotionEvent.ACTION_MOVE:
                 int moveX = (int) ev.getX();
                 int moveY = (int) ev.getY();
-
                 int distanceX = moveX - downX;
                 int distanceY = moveY - downY;
                 if (Math.abs(distanceX) > Math.abs(distanceY)) {
+                    // 如果当前状态为关闭，且滑动的距离小于0说明ViewPager需要这个事件，不要拦截
+                    if (currentState == State.CLOSE && distanceX < 0) {
+                        return false;
+                    }
+                    System.out.println("拦截成功");
                     return true;
                 }
                 break;

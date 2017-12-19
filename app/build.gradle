@@ -27,6 +27,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.jakewharton:butterknife:6.1.0'
     compile 'org.xutils:xutils:3.3.36'
+    compile 'com.inkapplications.viewpageindicator:library:2.4.3'
     compile 'com.google.code.gson:gson:2.6.2'
     testCompile 'junit:junit:4.12'
 }
